@@ -15,14 +15,18 @@ import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
 import android.opengl.GLSurfaceView.Renderer;
 
+import com.airhockey.android.util.TextResourceReader;
+
 public class AirHockeyRenderer implements Renderer {
 
 	private static final int POSITION_COMPONENT_COUNT = 2;
 	private static final int BYTES_PER_FLOAT = 4;
 	private final FloatBuffer vertexData;
+	private final Context context;
 	
-	public AirHockeyRenderer()
+	public AirHockeyRenderer(Context context)
 	{
+		this.context = context;
 		float[] tableVerticesWithTriangles = {
 			// Triangle 1
 			0f, 0f,
@@ -64,6 +68,11 @@ public class AirHockeyRenderer implements Renderer {
 	public void onSurfaceCreated(GL10 glUnsued, EGLConfig config)
 	{
 		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+		
+		String vertexShaderSource = TextResourceReader
+				.readTextFileFromResource(context, R.raw.simple_vertex_shader);
+		String fragmentShaderSource = TextResourceReader
+				.readTextFileFromResource(context,R.raw.simple_fragment_shader);
 	}
 
 }
