@@ -24,6 +24,7 @@ public class AirHockeyRenderer implements Renderer {
 	private static final int BYTES_PER_FLOAT = 4;
 	private final FloatBuffer vertexData;
 	private final Context context;
+	private int program;
 	
 	public AirHockeyRenderer(Context context)
 	{
@@ -81,6 +82,8 @@ public class AirHockeyRenderer implements Renderer {
 		int vertexShader = ShaderHelper.compileVertexShader(vertexShaderSource);
 		int fragmentShader = ShaderHelper
 				.compileFragmentShader(fragmentShaderSource);
+		
+		program = ShaderHelper.linkProgram(vertexShader, fragmentShader);
 	}
 
 }
