@@ -1,4 +1,4 @@
-package com.neuralsandwich.firstopenglproject;
+package com.airhockey.android;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -10,7 +10,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
-public class FirstOpenGLProjectActivity extends Activity {
+public class AirHockeyActivity extends Activity {
 
 	private GLSurfaceView glSurfaceView;
 	private boolean rendererSet = false;
@@ -32,7 +32,7 @@ public class FirstOpenGLProjectActivity extends Activity {
 			glSurfaceView.setEGLContextClientVersion(2);
 			
 			// Assign out renderer
-			glSurfaceView.setRenderer(new FirstOpenGLProjectRenderer());
+			glSurfaceView.setRenderer(new AirHockeyRenderer());
 			rendererSet = true;
 		} else {
 			Toast.makeText(this,
