@@ -63,4 +63,9 @@ public class ShaderHelper {
 		
 		return shaderObjectId;
 	}
+	
+	public static int linkProgram(int vertexShaderId, int fragmentShaderId)
+	{
+		return 0;
+	}
 }
