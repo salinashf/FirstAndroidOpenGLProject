@@ -15,6 +15,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
 import android.opengl.GLSurfaceView.Renderer;
 
+import com.airhockey.android.util.ShaderHelper;
 import com.airhockey.android.util.TextResourceReader;
 
 public class AirHockeyRenderer implements Renderer {
@@ -67,12 +68,19 @@ public class AirHockeyRenderer implements Renderer {
 	@Override
 	public void onSurfaceCreated(GL10 glUnsued, EGLConfig config)
 	{
+		// Clear the Screen (Red Background).
 		glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 		
+		// Load the shader from file.
 		String vertexShaderSource = TextResourceReader
 				.readTextFileFromResource(context, R.raw.simple_vertex_shader);
 		String fragmentShaderSource = TextResourceReader
 				.readTextFileFromResource(context,R.raw.simple_fragment_shader);
+		
+		// Compile shaders
+		int vertexShader = ShaderHelper.compileVertexShader(vertexShaderSource);
+		int fragmentShader = ShaderHelper
+				.compileFragmentShader(fragmentShaderSource);
 	}
 
 }
