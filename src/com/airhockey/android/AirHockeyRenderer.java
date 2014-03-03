@@ -4,7 +4,7 @@ import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
 import static android.opengl.GLES20.GL_FLOAT;
 import static android.opengl.GLES20.GL_LINES;
 import static android.opengl.GLES20.GL_POINTS;
-import static android.opengl.GLES20.GL_TRIANGLES;
+import static android.opengl.GLES20.GL_TRIANGLE_FAN;
 import static android.opengl.GLES20.glClear;
 import static android.opengl.GLES20.glClearColor;
 import static android.opengl.GLES20.glDrawArrays;
@@ -46,15 +46,13 @@ public class AirHockeyRenderer implements Renderer {
 	{
 		this.context = context;
 		float[] tableVerticesWithTriangles = {
-				// Triangle 1
-				-0.5f, -0.5f, 
+				// Hockey Table
+				0f,     0f,
+				-0.5f, -0.5f,
+				0.5f, -0.5f,
 				0.5f,  0.5f,
 				-0.5f,  0.5f,
-
-				// Triangle 2
-				-0.5f, -0.5f, 
-				0.5f, -0.5f, 
-				0.5f,  0.5f,
+				-0.5f, -0.5f,
 
 				// Line 1
 				-0.5f, 0f, 
@@ -83,7 +81,7 @@ public class AirHockeyRenderer implements Renderer {
 		// Change colour to white
 		glUniform4f(uColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
 		// Draw table as two triangles
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
 
 		// Change colour to red
 		glUniform4f(uColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
