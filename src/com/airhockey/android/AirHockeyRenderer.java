@@ -46,23 +46,23 @@ public class AirHockeyRenderer implements Renderer {
 	{
 		this.context = context;
 		float[] tableVerticesWithTriangles = {
-				// Hockey Table
-				0f,     0f,
-				-0.5f, -0.5f,
-				0.5f, -0.5f,
-				0.5f,  0.5f,
-				-0.5f,  0.5f,
-				-0.5f, -0.5f,
+				// Order of coordinates: X, Y, R, G, B
+
+				// Triangle Fan
+				0f,    0f,   1f,   1f,   1f,
+				-0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
+				0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
+				0.5f, 0.5f, 0.7f, 0.7f, 0.7f,
+				-0.5f,  0.5f, 0.7f, 0.7f, 0.7f,
+				-0.5f, -0.5f, 0.7f, 0.7f, 0.7f,
 
 				// Line 1
-				-0.5f, 0f, 
-				0.5f, 0f,
+				-0.5f, 0f, 1f, 0f, 0f,
+				0.5f, 0f, 1f, 0f, 0f,
 
 				// Mallets
-				0f, -0.25f, 
-				0f,  0.25f,
-				// Puck
-				0f, 0f
+				0f, -0.25f, 0f, 0f, 1f,
+				0f,  0.25f, 1f, 0f, 0f
 		};
 
 		vertexData = ByteBuffer
@@ -94,7 +94,7 @@ public class AirHockeyRenderer implements Renderer {
 		// Draw the second mallet red.
 		glUniform4f(uColorLocation, 1.0f, 0.0f, 1.0f, 1.0f);
 		glDrawArrays(GL_POINTS, 9, 1);
-		
+
 		// Set the colour black
 		glUniform4f(uColorLocation, 0f, 0f, 0f, 0f);
 		glDrawArrays(GL_POINTS, 10, 1);
