@@ -10,8 +10,6 @@ import static android.opengl.GLES20.glClearColor;
 import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glEnableVertexAttribArray;
 import static android.opengl.GLES20.glGetAttribLocation;
-import static android.opengl.GLES20.glGetUniformLocation;
-import static android.opengl.GLES20.glUniform4f;
 import static android.opengl.GLES20.glUseProgram;
 import static android.opengl.GLES20.glVertexAttribPointer;
 import static android.opengl.GLES20.glViewport;
@@ -31,14 +29,19 @@ import com.airhockey.android.util.ShaderHelper;
 import com.airhockey.android.util.TextResourceReader;
 
 public class AirHockeyRenderer implements Renderer {
-	private static final String U_COLOR = "u_Color";
+	private static final String A_COLOR = "a_Color";
 	private static final String A_POSITION = "a_Position";
 	private static final int POSITION_COMPONENT_COUNT = 2;
 	private static final int BYTES_PER_FLOAT = 4;
+	private static final int COLOR_COMPONENT_COUNT = 3;
+	private static final int STRIDE =
+			(POSITION_COMPONENT_COUNT +
+			COLOR_COMPONENT_COUNT) *
+			BYTES_PER_FLOAT;
 	private final FloatBuffer vertexData;
 	private final Context context;
 	private int program;
-	private int uColorLocation;
+	private int aColorLocation;
 	private int aPositionLocation;
 
 
@@ -78,26 +81,17 @@ public class AirHockeyRenderer implements Renderer {
 		// Clear the rendering surface.
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// Change colour to white
-		glUniform4f(uColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
 		// Draw table as two triangles
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
 
-		// Change colour to red
-		glUniform4f(uColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
 		// Draw dividing line
 		glDrawArrays(GL_LINES, 6, 2);
 
 		// Draw the first mallet blue.
-		glUniform4f(uColorLocation, 0.0f, 0.0f, 1.0f, 1.0f);
 		glDrawArrays(GL_POINTS, 8, 1);
-		// Draw the second mallet red.
-		glUniform4f(uColorLocation, 1.0f, 0.0f, 1.0f, 1.0f);
-		glDrawArrays(GL_POINTS, 9, 1);
 
-		// Set the colour black
-		glUniform4f(uColorLocation, 0f, 0f, 0f, 0f);
-		glDrawArrays(GL_POINTS, 10, 1);
+		// Draw the second mallet red.
+		glDrawArrays(GL_POINTS, 9, 1);
 	}
 
 	@Override
@@ -131,14 +125,20 @@ public class AirHockeyRenderer implements Renderer {
 		}
 
 		glUseProgram(program);
-		uColorLocation = glGetUniformLocation(program, U_COLOR);
+		aColorLocation = glGetAttribLocation(program, A_COLOR);
 		aPositionLocation = glGetAttribLocation(program, A_POSITION);
 
 		vertexData.position(0);
 		glVertexAttribPointer(aPositionLocation, POSITION_COMPONENT_COUNT,
-				GL_FLOAT, false, 0, vertexData);
+				GL_FLOAT, false, STRIDE, vertexData);
 		// Enable the vertex array
 		glEnableVertexAttribArray(aPositionLocation);
+
+		// Add vertex colours
+		vertexData.position(POSITION_COMPONENT_COUNT);
+		glVertexAttribPointer(aColorLocation, COLOR_COMPONENT_COUNT, GL_FLOAT,
+				false, STRIDE, vertexData);
+		glEnableVertexAttribArray(aColorLocation);
 	}
 
 }
