@@ -10,9 +10,12 @@ import static android.opengl.GLES20.glClearColor;
 import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glEnableVertexAttribArray;
 import static android.opengl.GLES20.glGetAttribLocation;
+import static android.opengl.GLES20.glGetUniformLocation;
+import static android.opengl.GLES20.glUniformMatrix4fv;
 import static android.opengl.GLES20.glUseProgram;
 import static android.opengl.GLES20.glVertexAttribPointer;
 import static android.opengl.GLES20.glViewport;
+import static android.opengl.Matrix.orthoM;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -31,6 +34,7 @@ import com.airhockey.android.util.TextResourceReader;
 public class AirHockeyRenderer implements Renderer {
 	private static final String A_COLOR = "a_Color";
 	private static final String A_POSITION = "a_Position";
+	private static final String U_MATRIX = "u_Matrix";
 	private static final int POSITION_COMPONENT_COUNT = 2;
 	private static final int BYTES_PER_FLOAT = 4;
 	private static final int COLOR_COMPONENT_COUNT = 3;
@@ -40,9 +44,11 @@ public class AirHockeyRenderer implements Renderer {
 			BYTES_PER_FLOAT;
 	private final FloatBuffer vertexData;
 	private final Context context;
+	private final float[] projectionMatrix = new float [16];
 	private int program;
 	private int aColorLocation;
 	private int aPositionLocation;
+	private int uMatrixLocation;
 
 
 	public AirHockeyRenderer(Context context)
@@ -81,6 +87,8 @@ public class AirHockeyRenderer implements Renderer {
 		// Clear the rendering surface.
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glUniformMatrix4fv(uMatrixLocation, 1, false, projectionMatrix, 0);
+
 		// Draw table as two triangles
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
 
@@ -99,6 +107,18 @@ public class AirHockeyRenderer implements Renderer {
 	{
 		// Set the OpenGL viewport to fill the entire surface.
 		glViewport(0, 0, width, height);
+		final float aspectRatio = width > height ?
+				(float) width / (float) height :
+				(float) height / (float) width;
+		if (width > height) {
+			// Landscape
+			orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio,
+					-1f, 1f, -1f, 1f);
+		} else {
+			// Protrat or sqaure
+			orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio,
+					aspectRatio, -1f, 1f);
+		}
 	}
 
 	@Override
@@ -127,6 +147,7 @@ public class AirHockeyRenderer implements Renderer {
 		glUseProgram(program);
 		aColorLocation = glGetAttribLocation(program, A_COLOR);
 		aPositionLocation = glGetAttribLocation(program, A_POSITION);
+		uMatrixLocation = glGetUniformLocation(program, U_MATRIX);
 
 		vertexData.position(0);
 		glVertexAttribPointer(aPositionLocation, POSITION_COMPONENT_COUNT,
